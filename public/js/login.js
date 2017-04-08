@@ -14,13 +14,14 @@ $.ajax({
     type: "GET",
     //dataType: "html",
     //headers:{"Content-Type":"application/json"},
-    url: "http://localhost:8091/checklogin",
+    url: "http://localhost:8081/checklogin",
     success: function(data){
-      console.log(data.session);
+    //  console.log(data.session);
       if(data.session === false)
       {
         console.log(data.session);
-        backToHome();
+        //backToHome();
+        window.location.hash='#about';
       }
       else {
         console.log("backtohome");
@@ -31,52 +32,80 @@ $.ajax({
     //   console.log('page was not loaded',error);
     // }
 });
-// function validateForm()
-// {
-//   var name=$("#userreg").val();
-//   var email1=$("#emailreg").val();
-//   var password=$("#passreg").val();
-//   var repass=$("#repassreg").val();
-//   var nameval=/^[A-Za-z]+$/;;
-//   var passval=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,10}/;
-//   var emailval=/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-//   var inputVal= new Array(name,email1,password,repass);
-//   var inputMessage = new Array("name", "email", "password", "repass");
-//   var flag = true;
-//    $('.error').hide();
-//
-//       if(inputVal[0] == ""){
-//           $('#userreg').after('<span class="error"> Please enter your ' + inputMessage[0] + '</span>');
-//           flag =false;
-//       }
-//       else if(!nameval.test(name)){
-//           $('#userreg').after('<span class="error"> Letters only</span>');
-//           flag=false;
-//       }
-//       if(inputVal[1] == ""){
-//     $('#emailreg').after('<span class="error"> Please enter your ' + inputMessage[1] + '</span>');
-//       flag=false;
-//       }
-//       else if(!emailval.test(email1)){
-//   $('#emailreg').after('<span class="error"> Please enter a valid email address</span>');
-//     flag=false;
-//       }
-//
-//       if(inputVal[2] == ""){
-//           $('#passreg').after('<span class="error"> Please enter your ' + inputMessage[2] + '</span>');
-//           flag=false;
-//       }
-//       else if(!passval.test(password)){
-//           $('#passreg').after('<span class="error">atleast one alphabet,specialsymbol,numeric,uppercase Letters</span>');
-//           flag=false;
-//       }
-//
-//       if(inputVal[3] != inputVal[2]){
-//           $('#repassreg').after('<span class="error">please enter correct password </span>');
-//           flag=false;
-//       }
-//       return flag;
-// }
+function validateForm()
+{
+  var name=$("#userreg").val();
+  var email1=$("#emailreg").val();
+  var password=$("#passreg").val();
+  var repass=$("#repassreg").val();
+  var nameval=/^[A-Za-z]+$/;;
+  var passval=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,10}/;
+  var emailval=/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+  var inputVal= new Array(name,email1,password,repass);
+  var inputMessage = new Array("name", "email", "password", "repass");
+  var flag = true;
+   $('.error').hide();
+
+      if(inputVal[0] == ""){
+          $('#userreg').after('<span class="error"> Please enter your ' + inputMessage[0] + '</span>');
+          flag =false;
+      }
+      else if(!nameval.test(name)){
+          $('#userreg').after('<span class="error"> Letters only</span>');
+          flag=false;
+      }
+      if(inputVal[1] == ""){
+    $('#emailreg').after('<span class="error"> Please enter your ' + inputMessage[1] + '</span>');
+      flag=false;
+      }
+      else if(!emailval.test(email1)){
+  $('#emailreg').after('<span class="error"> Please enter a valid email address</span>');
+    flag=false;
+      }
+
+      if(inputVal[2] == ""){
+          $('#passreg').after('<span class="error"> Please enter your ' + inputMessage[2] + '</span>');
+          flag=false;
+      }
+      else if(!passval.test(password)){
+          $('#passreg').after('<span class="error">atleast one alphabet,specialsymbol,numeric,uppercase Letters</span>');
+          flag=false;
+      }
+
+      if(inputVal[3] != inputVal[2]){
+          $('#repassreg').after('<span class="error">please enter correct password </span>');
+          flag=false;
+      }
+      return flag;
+}
+function validatelogin()
+{
+  var emailid=$('#emaillog').val();
+ var password=$('#passlog').val();
+ var passval=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,10}/;
+ var emailval=/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+ $('.error').hide();
+ var flag=true;
+if(emailid == "")
+{
+$('#emaillog').after('<span class="error"> Please enter your email</span>');
+flag =false;
+ }
+ else if(!emailval.test(emailid)){
+     $('#emaillog').after('<span class="error"> enter correct email id</span>');
+     flag=false;
+ }
+ if(password == "")
+ {
+ $('#passlog').after('<span class="error"> Please enter your password</span>');
+ flag =false;
+  }
+  else if(!passval.test(password)){
+      $('#passlog').after('<span class="error"> enter correct password</span>');
+      flag=false;
+  }
+  return flag;
+}
 $(document).on('click', '#logout', function(){
   console.log("back to home");
   $.ajax({
@@ -84,7 +113,7 @@ $(document).on('click', '#logout', function(){
       //data:userdetail,
       dataType: "json",
       //headers:{"Content-Type":"application/json"},
-      url: "http://localhost:8091/logout",
+      url: "http://localhost:8081/logout",
       success: function(data){
         //  alert(data);
         if(data.status==false){
@@ -101,19 +130,14 @@ $(document).on('click', '#logout', function(){
 });
 $("#register").click(function()
 {
-// if(validateForm())
-// {
+ if(validateForm())
+ {
   var name=$("#userreg").val();
   var email1=$("#emailreg").val();
   var password=$("#passreg").val();
   var repass=$("#repassreg").val();
      var temp=[];
    var userdetail={};
-   //sessionStorage.name1=name;
-   //sessionStorage.email=email1;
-  // sessionStorage.password=password;
-   //sessionStorage.repassword=repass;
-   //userdetail.name1 =name;
    userdetail["email"]=email1;
    userdetail["password"]=password;
    $.ajax({
@@ -121,7 +145,7 @@ $("#register").click(function()
        data:userdetail,
        dataType: "json",
        //headers:{"Content-Type":"application/json"},
-       url: "http://localhost:8091/signup",
+       url: "http://localhost:8081/signup",
        success: function(data){
           alert(data);
        },
@@ -129,62 +153,10 @@ $("#register").click(function()
          console.log('page was not loaded',error);
        }
    });
- // }
-  // temp[temp.length]=userdetail;
-//    console.log(JSON.stringify(temp));
-//    abc=JSON.parse(sessionStorage.getItem("user11"));
-//    if(abc!==null)
-//    {
-//      temp=abc;
-//      temp[temp.length]=userdetail;
-//       if (typeof(Storage) !== undefined) {
-// sessionStorage.setItem('user11',JSON.stringify(temp));
-// }
-// }else {
-//    temp[temp.length]=userdetail;
-//     if (typeof(Storage) !== undefined) {
-//    sessionStorage.setItem('user11',JSON.stringify(temp));
-// }
-// }
 alert("data inserted successfully");
-//$('#register').attr("type","reset");
-//backToHome();
+}
 });
 
-// function validatelogin()
-// {
-//   pqr=JSON.parse(sessionStorage.getItem("user11"));
-//   flag=true;
-//   console.log(pqr);
-//   for(var i=0;i<pqr.length;i++)
-//   {
-//      //$('.error').hide();
-//     var emailid=$('#emaillog').val();
-//     var password11=$('#passlog').val();
-//     //console.log(emailid);
-//     //console.log(password11);
-//     console.log(pqr[i].email);
-//     console.log(pqr[i].password);
-//  $('.error').hide();
-//
-//      if(pqr[i].email!=emailid)
-//      {
-//          $('#emaillog').after('<span class="error">please enter correct email id </span>');
-//          flag=false;
-//      }
-//      if(pqr[i].password!=password11)
-//      {
-//          $('#passlog').after('<span class="error">please enter correct password </span>');
-//          flag=false;
-//      }
-//      if(pqr[i].email==emailid && pqr[i].password==password11)
-//      {
-//        flag=true;
-//        break;
-//      }
-//    }
-//   return flag;
-// }
 function nextPage()
 {
   $.ajax({
@@ -249,12 +221,8 @@ function nextSignup()
 //$(document).on('click', '#loginPage', function()
 $("#loginPage").click(function()
 {
-  // if(validatelogin())
-  //   {
-  //     sessionStorage.setItem('nextpage',"nextpage");
-  //     nextPage();
-  //   alert("login successfully");
-  //   }
+  if(validatelogin())
+  {
   var emailid=$('#emaillog').val();
  var password11=$('#passlog').val();
  var logindata={};
@@ -266,26 +234,19 @@ $("#loginPage").click(function()
      data:logindata,
      dataType: "json",
       //headers:{"Content-Type":"application/json"},
-     url: "http://localhost:8091/login",
+     url: "http://localhost:8081/login",
      success: function(data){
        if(data.status==true)
        {
        console.log("hi");
        nextPage();
+       alert("login successfully");
      }
-        alert(data.status);
+      //  alert(data.status);
      }
  });
-    //sessionStorage.setItem('nextpage',"nextpage");
-
+ }
 });
-// $('#login').click(function()
-// {
-//   nextLogin();
-// });
-// $('#signup').click(function(){
-//   nextSignup();
-// });
 function backToHome()
 {
   $.ajax({
@@ -306,18 +267,4 @@ function backToHome()
   }
  });
  }
-// $('#backtohome').click(function()
-// {
-//   backToHome();
-// });
-// $("#form1").keydown(function () {
-//     if(event.keyCode == 13){
-//         event.preventDefault();
-//         if(validatelogin())
-//         {
-//           nextPage();
-//         alert("login successfully");
-//         }
-//     }
-// });
 });

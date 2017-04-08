@@ -1,68 +1,55 @@
-var express=require("express");
-var router=express.Router();
-//var firebase=require("firebase");
-var firebase= require('../config/config');
-//firebase.initializeApp(config);
+var express = require('express'),
+	app = express(),
+	router = express.Router(),
+	signup = require('../model/signup');
+  //signup = new signupClass();
 var validator = require('express-validator');
-router.use(validator());
-router.post("/", function(request, response) 
+
+	router.use(validator());
+  router.post('/signup', function(req,res)
 {
-try {
-                // ref.child(request.body.username).set({
-                //   name:request.body.username,
-                //   password:request.body.password
-                //     });
-                //request.checkBody("request.body.email", "Enter a valid email address.").isEmail();
-                var email = request.body.email;
-                var password = request.body.password;
+try
+		{
+						var signupsuccess = function (err,success) {
+							if(!err)
+							{
+								res.send({"status":true,"message":"Signup sucessful"});
+							}
+							else
+							{
+								res.send({"status":false,"message":"signup unsucessful"});
+							}
+						};
+						var loginData = {
+							email : req.body.email,
+							password : req.body.password,
+						}
 
-                request.checkBody("email", "Enter a valid email address.").isEmail();
-                request.checkBody("password","Enter a valid password").optional().matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,10}/);
-//var flag=0;
-                var errors = request.validationErrors();
-                        if (errors) {
-                            response.send(errors);
-                            return;
-                        } else {
+							req.checkBody("email", "Enter a valid email address.").isEmail();
+							req.checkBody("password", "Enter a valid password").optional().matches(/^.*(?=.{8,})(?=.*\d)(?=.*[a-z]*[A-Z])(?=.*[@#$%&_]).*$/);
+							var errors = req.validationErrors();
+							console.log(errors);
+							if (errors) {
+									res.send(errors);
+									return;
+							}
+							signup.saveUser(loginData);
+							signup.once("signupsucess",signupsuccess);
 
-                            console.log("auth");
-                            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-                              if(error)
-                                response.send({
-                                    "status": false,
-                                    "message": error.message
-                                });
-                                // response.send({"status":true,"message":"registration unsucessful"});
-                      }).then(function (data) {
-                        if (data)
-                        response.send({
-                            "status": true,
-                            "message": "Successfully signup"
-                        });
+						res.on("finish",function () {
+									console.log("finish");
+								 signup.removeListener("signupsucess", signupsuccess);
+						});
+						res.once("end",function () {
+								console.log("end");
+								 signup.removeListener("signupsucess", signupsuccess);
+						});
+}
+		catch (e)
+		{
+				console.log(e);
+				res.send({"status":false,"message":"server error"});
+		 }
 
-                      });
-                        // if(flag==1)
-                        // {
-                        //   console.log("registration unsucessful");
-                        //   response.send({
-                        //       "status": true,
-                        //       "message": "registration unsucessful"
-                        //   });
-                        // }
-                        //
-                        //   console.log("regs Successfull");
-                        // response.send({
-                        //     "status": true,
-                        //     "message": "registration Success"
-                        // });
-                        }
-
-                    } catch (e) {
-                        console.log(e);
-                        response.send({
-                            "status": false,
-                            "message": "SERVER ERROR"
-                        });
-                    }
-                });
-module.exports=router;
+	});
+module.exports = router;
